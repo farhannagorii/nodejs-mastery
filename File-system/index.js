@@ -11,14 +11,15 @@ fs.readFile("./demo.txt","utf8",(err,data)=>{
    fs.writeFile("./copy.txt",data,(err)=>{
     console.log(data)
    })
-
-   
-   
-
 })
 
-// “How can you add new content to an existing file without overwriting it?”
+// synch file reading
 
+let result = fs.readFileSync("./copy.txt","utf-8")
+console.log(result)
+
+
+// “How can you add new content to an existing file without overwriting it?
 
 fs.appendFile("./demo.txt","\n and i am 21 year old",(err,add)=>{
     if(err) throw err
