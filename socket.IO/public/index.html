@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chet-app</title>
+</head>
+
+<body>
+    <div>hello bro</div>
+    <input type="text" id="input" placeholder="enter words">
+    <button id="btn">button</button>
+   <div class="msgbox"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        let myinput = document.getElementById("input")
+        let button = document.getElementById("btn")
+        let msgbox = document.getElementById("msgbox")
+        
+        button.addEventListener("click",()=>{
+            console.log(myinput.value)
+           socket.emit("massage", myinput.value);
+        })
+
+        socket.on("msgfrombackend",(mfb)=>{
+            console.log(mfb)
+            const p = document.createElement("p")
+            p.textContent=mfb
+            msgbox.appendChild(p);  
+            console.log(mfb)
+        })
+        
+    
+    </script>
+</body> 
+
+</html>
