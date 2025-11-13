@@ -1,0 +1,1030 @@
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
+// 🔹 Stream kya hota hai?
+
+// Stream ek aisa concept hai Node.js me jo data ko ek saath nahi, balki chhote-chhote chunks me process karta hai.
+// Jaise jaise data aata hai, waise waise process hota rehta hai — bina poora data memory me load kiye.
+
+// 🔸 Example samajh
+
+// Soch ek 2GB ka file hai. Agar tu usse normally read karega, to Node.js pehle pura file memory me load karega, phir print karega.
+// Isse system hang ho sakta hai ya out of memory error de sakta hai.
+
+// ❌ Normal way (without stream)
+// const fs = require("fs");
+
+// const data = fs.readFileSync("bigfile.txt", "utf8");
+// console.log(data);
+
+
+// Yahaan pura file ek baar me memory me load hota hai.
+// Agar file bada hai — problem! ⚠️
+
+// ✅ Stream way (efficient)
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("bigfile.txt", "utf8");
+
+// readStream.on("data", (chunk) => {
+//   console.log("Chunk mila:", chunk.length);
+// });
+
+// readStream.on("end", () => {
+//   console.log("File completely read ho gayi ✅");
+// });
+
+// readStream.on("error", (err) => {
+//   console.log("Error:", err);
+// });
+
+
+// Yahaan:
+
+// "data" event tab trigger hota hai jab ek chunk milta hai.
+
+// "end" event tab hota hai jab poora data mil chuka hota hai.
+
+// "error" agar koi dikkat aayi to handle karta hai.
+
+// 👉 Ab data chunk by chunk process ho raha hai, matlab memory load bahut kam hai.
+
+// 🔹 Streams ke types (4 main types)
+
+// Readable Stream – jahan se data aata hai (e.g. file read, HTTP request)
+
+// Writable Stream – jahan par data jaata hai (e.g. file write, HTTP response)
+
+// Duplex Stream – dono (read + write) kar sakta hai (e.g. socket)
+
+// Transform Stream – data ko modify karke aage bhejta hai (e.g. zlib compression)
+
+// 🔸 Example: File copy using streams
+// const fs = require("fs");
+
+// const readStream = fs.createReadStream("input.txt");
+// const writeStream = fs.createWriteStream("output.txt");
+
+// readStream.pipe(writeStream);
+
+// console.log("File copy process started...");
+
+
+// 🔹 Yahaan .pipe() ek shortcut hai jo ek stream ka output dusre stream me connect kar deta hai.
+// Matlab — jitna data read hua, utna hi write ho jaata hai.
+// Efficient aur fast!
+
+// 🔸 Example: Transform stream (data modify karte hue)
+// const { Transform } = require("stream");
+
+// const upperCaseTransform = new Transform({
+//   transform(chunk, encoding, callback) {
+//     this.push(chunk.toString().toUpperCase());
+//     callback();
+//   }
+// });
+
+// process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+
+
+// Yahaan jab tu terminal me kuch likhega — wo uppercase me print hoga.
+// Real-time data modification!
+
+// 🔹 Real-World Use Cases
+// Use Case	Example
+// Reading large files	File system read with fs.createReadStream()
+// Sending large files to client	Video streaming apps
+// Compressing files	Using zlib.createGzip()
+// Real-time chat / sockets	Duplex streams
+// Data transformation pipelines	CSV → JSON conversion
+
+// Agar tu chahe to main next step me each stream type (Readable, Writable, Duplex, Transform) ko detail + custom code example ke sath samjha du.
+
+// Bata — shuru kare next part Readable Stream se?
+
+
+
